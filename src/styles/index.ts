@@ -20,7 +20,14 @@ export const {
       gray100: "#E1E1E6",
 
       green500: "#00875F",
-      grenn300: "#00B37E",
+      green300: "#00B37E",
+    },
+
+    fontSizes: {
+      font18: "18px",
+      font20: "20px",
+      font24: "24px",
+      font32: "32px",
     },
   },
 });
