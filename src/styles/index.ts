@@ -21,6 +21,7 @@ export const {
 
       green500: "#00875F",
       green300: "#00B37E",
+      container: "linear-gradient(180deg, #1EA483 0%, #7465D4 100%)",
     },
 
     fontSizes: {

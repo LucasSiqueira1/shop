@@ -11,7 +11,12 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <Container>
       <Header>
-        <Image src={IgniteLogo} alt="Logo da aplicacão" />
+        <Image
+          src={IgniteLogo}
+          alt="Logo da aplicacão"
+          onClick={() => window.location.replace("/")}
+          style={{ cursor: "pointer" }}
+        />
       </Header>
       <Component {...pageProps} />
     </Container>
