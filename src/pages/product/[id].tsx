@@ -11,6 +11,9 @@ import Stripe from "stripe";
 import { formatPrice } from "../utils/formatPrice";
 import { useRouter } from "next/router";
 import { FadeLoader } from "react-spinners";
+import axios from "axios";
+import { useState } from "react";
+import Head from "next/head";
 
 interface ProductProps {
   productDetail: {
@@ -19,12 +22,36 @@ interface ProductProps {
     imageUrl: string;
     price: Stripe.Price;
     description: string;
+    defaultPriceId: string;
   };
 }
 const ProductsPage = ({ productDetail }: ProductProps) => {
   const { isFallback } = useRouter();
+  const [isLoadingState, setIsLoadingState] = useState(false);
+
+  const handleBuyProduct = async () => {
+    try {
+      setIsLoadingState(true);
+      const response = await axios.post("/api/checkout", {
+        priceId: productDetail.defaultPriceId,
+      });
+
+      const { checkoutUrl } = response.data;
+      window.open(checkoutUrl, "_blank");
+    } catch (error) {
+      setIsLoadingState(false);
+      console.log(error);
+    } finally {
+      setIsLoadingState(false);
+    }
+  };
+
   return (
     <>
+      <Head>
+        <title>{productDetail?.title}</title>
+      </Head>
+
       {isFallback ? (
         <ProductLoadingContainer>
           <FadeLoader color="#36d7b7" />
@@ -44,7 +71,12 @@ const ProductsPage = ({ productDetail }: ProductProps) => {
             <h1>{productDetail.title}</h1>
             <span>{formatPrice(productDetail.price.unit_amount)}</span>
             <p>{productDetail.description}</p>
-            <button>Comprar agora</button>
+            <button
+              onClick={() => handleBuyProduct()}
+              disabled={isLoadingState}
+            >
+              Comprar agora
+            </button>
           </ProductDetails>
         </ProductContainer>
       )}
@@ -68,6 +100,8 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     expand: ["default_price"],
   });
 
+  const defaultPriceId = productResponse.default_price as Stripe.Price;
+
   return {
     props: {
       productDetail: {
@@ -76,6 +110,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
         imageUrl: productResponse.images[0],
         price: productResponse.default_price,
         description: productResponse.description,
+        defaultPriceId: defaultPriceId.id,
       },
     },
     revalidate: 60 * 60 * 1, // 1 hour

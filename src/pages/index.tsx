@@ -1,7 +1,7 @@
 import { HomeContainer, Products } from "@/styles/pages/home";
 import { GetStaticProps } from "next";
+import Head from "next/head";
 import Image from "next/image";
-import Link from "next/link";
 
 import { useKeenSlider } from "keen-slider/react";
 import { stripe } from "@/infra/stripe";
@@ -27,31 +27,37 @@ export default function Home({ productList }: HomeProps) {
   });
 
   return (
-    <HomeContainer ref={sliderRef} className="keen-slider">
-      {productList.map((products, index: number) => {
-        return (
-          <>
-            {/* styled LINK do next */}
-            <Products
-              href={`/product/${products.id}`}
-              key={products.id}
-              className="keen-slider__slide"
-            >
-              <Image
-                src={products.imageUrl}
-                width={520}
-                height={480}
-                alt={`Imagem ${index + 1}`}
-              />
-              <footer>
-                <strong>{products.title}</strong>
-                <span>{formatPrice(products.price.unit_amount)}</span>
-              </footer>
-            </Products>
-          </>
-        );
-      })}
-    </HomeContainer>
+    <>
+      <Head>
+        <title>Home | Loja de camisetas</title>
+      </Head>
+      <HomeContainer ref={sliderRef} className="keen-slider">
+        {productList.map((products, index: number) => {
+          return (
+            <>
+              {/* styled LINK do next */}
+              <Products
+                href={`/product/${products.id}`}
+                key={products.id}
+                className="keen-slider__slide"
+                prefetch={false}
+              >
+                <Image
+                  src={products.imageUrl}
+                  width={520}
+                  height={480}
+                  alt={`Imagem ${index + 1}`}
+                />
+                <footer>
+                  <strong>{products.title}</strong>
+                  <span>{formatPrice(products.price.unit_amount)}</span>
+                </footer>
+              </Products>
+            </>
+          );
+        })}
+      </HomeContainer>
+    </>
   );
 }
 

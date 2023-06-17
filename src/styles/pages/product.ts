@@ -26,7 +26,7 @@ export const ImageContainer = styled("div", {
   // marginLeft: "calc(50% - 576px/2 - 296px)",
   width: "100%",
   maxWidth: 576,
-  height: "calc(656px - 0.5rem)",
+  minHeight: "75vh",
   background: "$container",
   borderRadius: 8,
   display: "flex",
@@ -71,7 +71,12 @@ export const ProductDetails = styled("div", {
     fontWeight: 700,
     fontSize: "18px",
 
-    "&:hover": {
+    "&:disabled": {
+      opacity: 0.6,
+      cursor: "not-allowed",
+    },
+
+    "&:not(:disabled):hover": {
       background: "$green300",
       transition: "0.4s",
     },
